@@ -61,6 +61,7 @@ let
               ];
               management = [
                 net.networkRange
+                "172.16.107.0/24"
               ];
             };
           };
