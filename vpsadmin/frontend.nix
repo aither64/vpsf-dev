@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   osctl.pools.tank = {
     users.vpsadmin-front = {
       uidMap = [ "0:500000:65536" ];
@@ -28,19 +30,19 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.7"; prefixLength = 24; }
+            net.vpsadmin.frontend.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           vpsadmin.download-mounter = {
             enable = true;
-            api.url = "http://192.168.122.1:4567";
+            api.url = "http://${net.aitherdev.address}:4567";
             api.tokenFile = "/private/vpsadmin-api.token";
             mountpoint = "/mnt/download";
           };
@@ -51,7 +53,7 @@
             api.prod = {
               frontend.bind = [ "unix@/run/haproxy/vpsadmin-api.sock mode 0666" ];
               backends = builtins.genList (i: {
-                host = "192.168.122.8";
+                host = net.vpsadmin.api.address;
                 port = 9292 + i;
               }) 2;
             };
@@ -61,7 +63,7 @@
               # frontend.port = 5002;
               backends = [
                 {
-                  host = "192.168.122.8";
+                  host = net.vpsadmin.api.address;
                   port = 8000;
                 }
               ];
@@ -72,7 +74,7 @@
               #frontend.port = 5001;
               backends = [
                 {
-                  host = "192.168.122.9";
+                  host = net.vpsadmin.webui.address;
                   port = 80;
                 }
               ];

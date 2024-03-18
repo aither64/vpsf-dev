@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   imports = [
     ./base.nix
     #../repository.nix
@@ -17,15 +19,15 @@
   };
 
   boot.qemu.disks = [
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadminos-os2-tank"; type = "blockdev"; }
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadminos-os2-dozer"; type = "blockdev"; }
+    { device = "os2-tank.dat"; type = "file"; size = "40G"; create = true; }
+    { device = "os2-dozer.dat"; type = "file"; size = "20G"; create = true; }
   ];
 
   networking.static = {
-    ip = "192.168.122.32/24";
+    ip = net.nodes.os2.string;
     interface = "eth0";
-    route = "192.168.122.32/24";
-    gateway = "192.168.122.1";
+    route = net.nodes.os2.string;
+    gateway = net.gateway;
   };
 
   services.zfs.autoScrub = {
@@ -122,7 +124,7 @@
       chown ${config.services.bird2.user}:${config.services.bird2.group} /var/log/bird.log
     '';
     config = ''
-      router id 192.168.122.32;
+      router id ${net.nodes.os2.address};
       log "/var/log/bird.log" all;
       debug protocols all;
 

@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+let
+  net = import ../networking.nix;
+in 
 {
   osctl.pools.tank = {
     users.vpsadmin-mailer = {
@@ -28,15 +31,15 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.11"; prefixLength = 24; }
+            net.vpsadmin.mailer.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           vpsadmin.nodectld = {
             enable = true;

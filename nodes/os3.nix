@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   imports = [
     ./base.nix
   ];
@@ -8,13 +10,13 @@
   vpsadmin.nodectld.settings.vpsadmin.node_id = 52;
 
   boot.qemu.disks = [
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadminos-os3-tank"; type = "blockdev"; }
+    { device = "os3-tank.dat"; type = "file"; }
   ];
 
   networking.static = {
-    ip = "192.168.122.33/24";
+    ip = net.nodes.os3.string;
     interface = "eth0";
-    route = "192.168.122.33/24";
-    gateway = "192.168.122.1";
+    route = net.nodes.os3.string;
+    gateway = net.gateway;
   };
 }

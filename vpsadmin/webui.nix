@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   osctl.pools.tank = {
     users.vpsadmin-webui = {
       uidMap = [ "0:500000:65536" ];
@@ -42,15 +44,15 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.9"; prefixLength = 24; }
+            net.vpsadmin.webui.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           networking.firewall.allowedTCPPorts = [ 80 ];
 
@@ -64,15 +66,15 @@
             enable = true;
             sourceCodeDir = "/opt/vpsadmin/webui";
             productionEnvironmentId = 1;
-            domain = "192.168.122.9";
+            domain = net.vpsadmin.webui.address;
             errorReporting = "E_ALL";
-            api.externalUrl = "http://192.168.122.1:4567";
-            api.internalUrl = "http://192.168.122.1:4567";
+            api.externalUrl = "http://${net.aitherdev.address}:4567";
+            api.internalUrl = "http://${net.aitherdev.address}:4567";
             extraConfig = ''
               require "/private/vpsadmin-webui.php";
             '';
             allowedIPv4Ranges = [
-              "192.168.122.7/32"
+              "${net.vpsadmin.frontend.address}/32"
             ];
           };
 
@@ -93,7 +95,7 @@
             phpEnv."PATH" = lib.makeBinPath [ pkgs.php ];
           };
 
-          services.nginx.virtualHosts."192.168.122.9".locations."= /adminer/adminer.php" =
+          services.nginx.virtualHosts.${net.vpsadmin.webui.address}.locations."= /adminer/adminer.php" =
             let
               version = "4.8.1";
 

@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   osctl.pools.tank = {
     users.vpsadmin-redis = {
       uidMap = [ "0:500000:65536" ];
@@ -27,21 +29,21 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.6"; prefixLength = 24; }
+            net.vpsadmin.redis.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           vpsadmin.redis = {
             enable = true;
             passwordFile = "/private/vpsadmin-redis.pw";
             allowedIPv4Ranges = [
-              "192.168.122.9/32"
+              "${net.vpsadmin.webui.address}/32"
             ];
           };
         };

@@ -2,8 +2,10 @@
 set -x
 set -e
 
+pushd "$WORKSPACE"/vpsadmin/vpsadminos/os
+
 for node in $@ ; do
-	cfg="./configs/nodes/$node.nix"
+	cfg="$VPSFDEV/nodes/$node.nix"
 	ip=$(nix-instantiate \
 		--arg configuration "$cfg" \
 		--eval \
@@ -24,3 +26,5 @@ for node in $@ ; do
 	ssh root@$addr "$system/bin/switch-to-configuration" switch
 	#ssh root@$addr "$system/bin/switch-to-configuration" dry-activate
 done
+
+popd

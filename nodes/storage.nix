@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   imports = [
     ./base.nix
   ];
@@ -16,14 +18,14 @@
   };
 
   boot.qemu.disks = [
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadminos-storage"; type = "blockdev"; }
+    { device = "storage-tank.dat"; type = "file"; }
   ];
 
   networking.static = {
-    ip = "192.168.122.20/24";
+    ip = net.nodes.storage.string;
     interface = "eth0";
-    route = "192.168.122.20/24";
-    gateway = "192.168.122.1";
+    route = net.nodes.storage.string;
+    gateway = net.gateway;
   };
 
   boot.zfs.pools = lib.mkForce {

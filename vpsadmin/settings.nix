@@ -1,5 +1,7 @@
 { config, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   vpsadmin = {
     plugins = [
       "monitoring"
@@ -12,9 +14,9 @@
 
     rabbitmq = {
       hosts = [
-        "192.168.122.12"
-        "192.168.122.13"
-        "192.168.122.14"
+        net.vpsadmin.rabbitmq1.address
+        net.vpsadmin.rabbitmq2.address
+        net.vpsadmin.rabbitmq3.address
       ];
       virtualHost = "vpsadmin_dev";
     };

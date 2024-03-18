@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   fileSystems."/mnt/vpsadmin-db" = {
     # device = "/dev/sdb1";
     device = "/dev/disk/by-uuid/d6ba04de-76dc-442a-8b86-6e48375bdbe1";
@@ -47,21 +49,21 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.10"; prefixLength = 24; }
+            net.vpsadmin.database.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           vpsadmin.database = {
             enable = true;
             defaultConfig = false;
             allowedIPv4Ranges = [
-              "192.168.122.0/24"
+              net.networkRange
             ];
           };
         };

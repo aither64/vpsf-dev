@@ -8,7 +8,7 @@ let
 in {
   imports = [
     <vpsadmin/nixos/modules/vpsadminos-modules.nix>
-    ../qemu.nix
+    <vpsadminos/os/configs/qemu.nix>
     ../vpsadmin/settings.nix
   ];
 
@@ -70,14 +70,12 @@ in {
   networking.lxcbr.enable = true;
   networking.static.enable = mkDefault true;
   networking.hosts = {
-    "192.168.122.31" = [ "os1" "os1.prg.vpsfree.cz" ];
-    "192.168.122.32" = [ "os2" "os2.prg.vpsfree.cz" ];
-    "192.168.122.11" = [ "node1-zfs" "node1-zfs.prg.vpsfree.cz" ];
-    "192.168.122.12" = [ "node2-zfs" "node2-zfs.prg.vpsfree.cz" ];
+    "172.16.106.41" = [ "os1" "os1.prg.vpsfree.cz" ];
+    "172.16.106.42" = [ "os2" "os2.prg.vpsfree.cz" ];
   };
 
   environment.etc = {
-    "resolv.conf".text = "nameserver 192.168.122.1";
+    "resolv.conf".text = "nameserver 172.16.106.1";
     "ssh/ssh_host_rsa_key.pub".source = ../ssh_host_rsa_key.pub;
     "ssh/ssh_host_rsa_key" = { mode = "0600"; source = ../ssh_host_rsa_key; };
     "ssh/ssh_host_ed25519_key.pub".source = ../ssh_host_ed25519_key.pub;
@@ -169,7 +167,7 @@ in {
 
     network = {
       mode = "bridge";
-      bridge.link = "virbr0";
+      bridge.link = "br0";
     };
   };
 

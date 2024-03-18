@@ -1,4 +1,7 @@
 { config, pkgs, lib, ... }:
+let
+  net = import ../networking.nix;
+in 
 {
   imports = [
     ./base.nix
@@ -17,20 +20,20 @@
   };
 
   boot.qemu.disks = [
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadminos-os1-tank"; type = "blockdev"; }
-    { device = "/dev/zvol/tank/encrypted/libvirt/vpsadmin-db"; type = "blockdev"; }
+    { device = "os1-tank.dat"; type = "file"; size = "40G"; }
+    { device = "vpsadmin-db.dat"; type = "file"; size = "60G"; }
   ];
 
   # networking.static = {
-  #   ip = "192.168.122.31/24";
+  #   ip = "172.16.106.41/24";
   #   interface = "eth0";
-  #   route = "192.168.122.31/24";
-  #   gateway = "192.168.122.1";
+  #   route = "172.16.106.41/24";
+  #   gateway = "172.16.106.1";
   # };
 
   networking.static = {
     enable = false;
-    ip = "192.168.122.31/24";
+    ip = net.nodes.os1.string;
   };
 
   networking.custom = ''
@@ -40,8 +43,8 @@
     ip link set eth0 up
     ip link set eth0 master br0
 
-    ip addr add 192.168.122.31/24 dev br0
-    ip route add default via 192.168.122.1 dev br0
+    ip addr add ${net.nodes.os1.string} dev br0
+    ip route add default via ${net.gateway} dev br0
   '';
 
   services.bird2 = {
@@ -51,7 +54,7 @@
       chown ${config.services.bird2.user}:${config.services.bird2.group} /var/log/bird.log
     '';
     config = ''
-      router id 192.168.122.31;
+      router id ${net.nodes.os1.address};
       log "/var/log/bird.log" all;
       debug protocols all;
 

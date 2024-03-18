@@ -1,0 +1,5 @@
+#!/bin/sh
+. ./vars.sh
+. ./shellhook.local.sh
+cd "$WORKSPACE"/vpsadmin/vpsadminos
+exec nix-shell "$@"

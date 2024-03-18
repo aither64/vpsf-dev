@@ -1,9 +1,11 @@
 { config, pkgs, lib, ... }:
 let
+  net = import ../networking.nix;
+
   instances = [
-    { name = "vpsadmin-rabbitmq1"; ip = "192.168.122.12"; }
-    { name = "vpsadmin-rabbitmq2"; ip = "192.168.122.13"; }
-    { name = "vpsadmin-rabbitmq3"; ip = "192.168.122.14"; }
+    { name = "vpsadmin-rabbitmq1"; ip = net.vpsadmin.rabbitmq1; }
+    { name = "vpsadmin-rabbitmq2"; ip = net.vpsadmin.rabbitmq2; }
+    { name = "vpsadmin-rabbitmq3"; ip = net.vpsadmin.rabbitmq3; }
   ];
 
   mkInstances = lib.listToAttrs (map (instance:
@@ -32,33 +34,33 @@ let
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = ip; prefixLength = 24; }
+            ip.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
           networking.hosts = lib.listToAttrs (map (instance:
-            lib.nameValuePair instance.ip [ instance.name ]
+            lib.nameValuePair instance.ip.address [ instance.name ]
           ) instances);
 
           vpsadmin.rabbitmq = {
             enable = true;
             allowedIPv4Ranges = {
               cluster = [
-                "192.168.122.12/24"
-                "192.168.122.13/24"
-                "192.168.122.14/24"
+                net.vpsadmin.rabbitmq1.string
+                net.vpsadmin.rabbitmq2.string
+                net.vpsadmin.rabbitmq3.string
               ];
               clients = [
-                "192.168.122.0/24"
+                net.networkRange
               ];
               management = [
-                "192.168.122.0/24"
+                net.networkRange
               ];
             };
           };

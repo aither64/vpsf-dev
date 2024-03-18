@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-{
+let
+  net = import ../networking.nix;
+in {
   osctl.pools.tank = {
     users.vpsadmin-api = {
       uidMap = [ "0:500000:65536" ];
@@ -28,15 +30,15 @@
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [
-            { address = "192.168.122.8"; prefixLength = 24; }
+            net.vpsadmin.api.nixosAddress
           ];
 
           networking.defaultGateway = {
-            address = "192.168.122.1";
+            address = net.gateway;
             interface = "eth0";
           };
 
-          networking.nameservers = [ "192.168.122.1" ];
+          networking.nameservers = net.nameservers;
 
 
           vpsadmin.api = {
@@ -45,13 +47,13 @@
               builtins.filterSource
               (path: type: !(type == "directory" && baseNameOf path == ".git"))
               /home/aither/workspace/vpsfree.cz/vpsfree-cz-configuration/configs/vpsadmin/api;
-            address = "192.168.122.8";
+            address = net.vpsadmin.api.address;
             servers = 2;
             allowedIPv4Ranges = [
-              "192.168.122.7/32"
+              "${net.vpsadmin.frontend.address}/32"
             ];
             database = {
-              host = "192.168.122.10";
+              host = net.vpsadmin.database.address;
               user = "vpsadmin";
               name = "vpsadmin";
               passwordFile = "/private/vpsadmin-db.pw";
@@ -66,7 +68,7 @@
             enable = false;
             servers = 2;
             database = {
-              host = "192.168.122.10";
+              host = net.vpsadmin.database.address;
               user = "vpsadmin";
               name = "vpsadmin";
               passwordFile = "/private/vpsadmin-db.pw";
@@ -80,7 +82,7 @@
           vpsadmin.console-router = {
             enable = true;
             allowedIPv4Ranges = [
-              "192.168.122.7/32"
+              "${net.vpsadmin.frontend.address}/32"
             ];
             rabbitmq = {
               username = "console-router";
