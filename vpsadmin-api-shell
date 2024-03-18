@@ -1,0 +1,4 @@
+#!/bin/sh
+. ./vars.sh
+cd "$WORKSPACE"/vpsadmin/vpsadmin/api
+exec nix-shell "$@"
