@@ -19,8 +19,8 @@ in {
   };
 
   boot.qemu.disks = [
-    { device = "os2-tank.dat"; type = "file"; size = "40G"; create = true; }
-    { device = "os2-dozer.dat"; type = "file"; size = "20G"; create = true; }
+    { device = "os2-tank.dat"; type = "file"; size = "40G"; }
+    { device = "os2-dozer.dat"; type = "file"; size = "20G"; }
   ];
 
   networking.static = {
