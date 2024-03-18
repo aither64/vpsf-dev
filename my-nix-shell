@@ -1,0 +1,3 @@
+#!/bin/sh
+. ./shellhook.local.sh
+exec nix-shell "$@"
