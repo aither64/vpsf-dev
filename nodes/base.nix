@@ -60,6 +60,7 @@ in {
     enable = true;
     extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
   };
+  services.prometheus.exporters.osctl.enable = true;
   boot.kernel.sysctl."sunrpc.nfs_debug" = 1023;
 
   osctld.settings.cpu_scheduler = {
