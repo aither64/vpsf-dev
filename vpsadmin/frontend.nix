@@ -40,6 +40,10 @@ in {
 
           networking.nameservers = net.nameservers;
 
+          systemd.tmpfiles.rules = [
+            "d /run/varnish 0755 varnish varnish -"
+          ];
+
           vpsadmin.download-mounter = {
             enable = true;
             api.url = "http://${net.aitherdev.address}:4567";
@@ -81,6 +85,22 @@ in {
             };
           };
 
+          vpsadmin.varnish = {
+            enable = true;
+
+            bind = "/run/varnish/vpsadmin-varnish.sock,mode=0666";
+
+            api.prod = {
+              domain = "api.dev.home.vpsfree.cz";
+              backend.path = "/run/haproxy/vpsadmin-api.sock";
+            };
+
+            api.maintenance = {
+              domain = "api-tmp.dev.home.vpsfree.cz";
+              backend.path = "/run/haproxy/vpsadmin-api.sock";
+            };
+          };
+
           vpsadmin.frontend = {
             enable = true;
 
@@ -90,9 +110,10 @@ in {
                 backend = {
                   # host = "localhost";
                   # port = 5000;
-                  address = "unix:/run/haproxy/vpsadmin-api.sock";
+                  # address = "unix:/run/haproxy/vpsadmin-api.sock";
+                  address = "unix:/run/varnish/vpsadmin-varnish.sock";
                 };
-                maintenance.enable = true;
+                maintenance.enable = false;
               };
 
               maintenance = {
@@ -100,7 +121,8 @@ in {
                 backend = {
                   # host = "localhost";
                   # port = 5000;
-                  address = "unix:/run/haproxy/vpsadmin-api.sock";
+                  # address = "unix:/run/haproxy/vpsadmin-api.sock";
+                  address = "unix:/run/varnish/vpsadmin-varnish.sock";
                 };
               };
             };
