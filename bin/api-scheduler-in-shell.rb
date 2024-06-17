@@ -6,6 +6,4 @@ require 'bundler/setup'
 require 'vpsadmin'
 require 'pry'
 
-EventMachine.run do
-  VpsAdmin::Scheduler.start
-end
+VpsAdmin::Scheduler::Daemon.run
