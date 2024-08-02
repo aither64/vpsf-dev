@@ -31,6 +31,9 @@ in {
     rabbitmq1 = mkAddr 60;
     rabbitmq2 = mkAddr 61;
     rabbitmq3 = mkAddr 62;
+    dns1 = mkAddr 65;
+    dns2 = mkAddr 66;
+    dns3 = mkAddr 67;
   };
 
   gateway = "${network}.1";

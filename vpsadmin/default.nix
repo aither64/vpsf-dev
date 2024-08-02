@@ -8,5 +8,6 @@
     ./frontend.nix
     ./mailer.nix
     ./rabbitmq.nix
+    ./dns.nix
   ];
 }
