@@ -211,6 +211,8 @@ in {
 
   services.prometheus.exporters.ipmi.enable = true;
 
+  services.goresheat.enable = true;
+
   hardware.cpu.intel.updateMicrocode = true;
 
 #os.channel-registration.enable = true;
