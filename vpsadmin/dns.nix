@@ -54,6 +54,7 @@ let
             enable = true;
             forwarders = lib.mkForce [];
             zones = [];
+            directory = "/var/named";
             extraOptions = ''
               recursion no;
               allow-query-cache { none; };
@@ -66,6 +67,10 @@ let
               include "/var/named/vpsadmin/named.conf";
             '';
           };
+
+          systemd.tmpfiles.rules = [
+            "d '/var/named' 0750 named named - -"
+          ];
 
           networking.firewall.allowedTCPPorts = [ 53 ];
           networking.firewall.allowedUDPPorts = [ 53 ];
