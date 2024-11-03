@@ -193,7 +193,7 @@ in {
 
   programs.bash.root.historyPools = mkDefault [ "tank" ];
 
-  os.channel-registration.enable = mkDefault false;
+  os.channel-registration.enable = false;
 
   nix.nixPath = [
     "nixpkgs=/mnt/nixpkgs"
