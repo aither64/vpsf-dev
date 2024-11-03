@@ -56,10 +56,12 @@ in {
 
             api.prod = {
               frontend.bind = [ "unix@/run/haproxy/vpsadmin-api.sock mode 0666" ];
-              backends = builtins.genList (i: {
-                host = net.vpsadmin.api.address;
-                port = 9292 + i;
-              }) 2;
+              backends = [
+                {
+                  host = net.vpsadmin.api.address;
+                  port = 9292;
+                }
+              ];
             };
 
             console-router.prod = {

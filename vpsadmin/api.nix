@@ -48,7 +48,7 @@ in {
               (path: type: !(type == "directory" && baseNameOf path == ".git"))
               /home/aither/workspace/vpsfree.cz/vpsfree-cz-configuration/configs/vpsadmin/api;
             address = net.vpsadmin.api.address;
-            servers = 2;
+            workers = 2;
             allowedIPv4Ranges = [
               "${net.vpsadmin.frontend.address}/32"
             ];
