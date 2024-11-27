@@ -199,4 +199,6 @@ in {
     "nixpkgs=/mnt/nixpkgs"
     "nixpkgs-overlays=/mnt/vpsadminos/os/overlays/common.nix"
   ];
+
+  services.irqbalance.enable = true;
 }
