@@ -200,5 +200,7 @@ in {
     "nixpkgs-overlays=/mnt/vpsadminos/os/overlays/common.nix"
   ];
 
+  # system.vpsadminos.enableUnstable = true;
+
   services.irqbalance.enable = true;
 }
