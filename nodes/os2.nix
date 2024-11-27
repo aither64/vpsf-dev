@@ -5,6 +5,7 @@ in {
   imports = [
     ./base.nix
     #../repository.nix
+    ./crashdump.nix
   ];
 
   networking.hostName = "os2.prg.vpsfree.cz";
@@ -215,7 +216,7 @@ in {
 
   hardware.cpu.intel.updateMicrocode = true;
 
-#os.channel-registration.enable = true;
+  #os.channel-registration.enable = true;
 
   # swapDevices = [
   #   { device = "/dev/disk/by-label/kokes"; }
