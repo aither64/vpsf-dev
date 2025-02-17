@@ -197,7 +197,7 @@ in {
 
   nix.nixPath = [
     "nixpkgs=/mnt/nixpkgs"
-    "nixpkgs-overlays=/mnt/vpsadminos/os/overlays/common.nix"
+    "vpsadminos=/mnt/vpsadminos"
   ];
 
   # system.vpsadminos.enableUnstable = true;
