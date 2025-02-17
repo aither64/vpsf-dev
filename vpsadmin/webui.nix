@@ -72,10 +72,10 @@ in {
             enable = true;
             sourceCodeDir = "/opt/vpsadmin/webui";
             productionEnvironmentId = 1;
-            domain = net.vpsadmin.webui.address;
+            domain = "webui.aitherdev.int.vpsfree.cz";
             errorReporting = "E_ALL";
-            api.externalUrl = "http://${net.aitherdev.address}:4567";
-            api.internalUrl = "http://${net.aitherdev.address}:4567";
+            api.externalUrl = "https://api.aitherdev.int.vpsfree.cz:4567";
+            api.internalUrl = "https://api.aitherdev.int.vpsfree.cz:4567";
             extraConfig = ''
               require "/private/vpsadmin-webui.php";
             '';
