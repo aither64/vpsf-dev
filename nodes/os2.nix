@@ -1,11 +1,16 @@
 { config, pkgs, lib, ... }:
 let
   net = import ../networking.nix;
+
+  modprobeWrapper = pkgs.writeScript "modprobe-wrapper.sh" ''
+    #!/bin/sh
+    echo "$@" | ${pkgs.util-linux}/bin/logger -t kernel.modprobe
+    exec ${pkgs.kmod}/bin/modprobe "$@"
+  '';
 in {
   imports = [
     ./base.nix
     #../repository.nix
-    ./crashdump.nix
   ];
 
   networking.hostName = "os2.prg.vpsfree.cz";
@@ -222,4 +227,6 @@ in {
   #   { device = "/dev/disk/by-label/kokes"; }
   #   { label = "superswap"; }
   # ];
+
+  boot.kernel.sysctl."kernel.modprobe" = "${modprobeWrapper}";
 }
