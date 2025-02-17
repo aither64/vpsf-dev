@@ -205,7 +205,6 @@ in {
                   # port = 5001;
                   address = "unix:/run/haproxy/vpsadmin-webui.sock";
                 };
-                maintenance.enable = true;
               };
 
               maintenance = {
@@ -215,6 +214,7 @@ in {
                   # port = 5001;
                   address = "unix:/run/haproxy/vpsadmin-webui.sock";
                 };
+                maintenance.enable = true;
               };
             };
           };
