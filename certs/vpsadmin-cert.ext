@@ -1,0 +1,23 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ req_distinguished_name ]
+C  = CZ
+ST = Czech Republic
+L  = Prague
+O  = vpsFree.cz
+CN = webui.aitherdev.int.vpsfree.cz
+
+[alt_names]
+DNS.1 = api.aitherdev.int.vpsfree.cz
+DNS.2 = api-tmp.aitherdev.int.vpsfree.cz
+DNS.3 = auth.aitherdev.int.vpsfree.cz
+DNS.4 = auth-tmp.aitherdev.int.vpsfree.cz
+DNS.5 = console.aitherdev.int.vpsfree.cz
+DNS.6 = console-tmp.aitherdev.int.vpsfree.cz
+DNS.7 = download.aitherdev.int.vpsfree.cz
+DNS.8 = webui.aitherdev.int.vpsfree.cz
+DNS.9 = webui-tmp.aitherdev.int.vpsfree.cz
