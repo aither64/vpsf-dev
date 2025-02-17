@@ -38,7 +38,11 @@ in {
 
   gateway = "${network}.1";
 
-  nameservers = [ "${network}.1" ];
+  nameservers = [
+    "172.16.9.90"
+    "172.19.9.90"
+    "${network}.1"
+  ];
 
   aitherdev = mkAddr 40;
 }
