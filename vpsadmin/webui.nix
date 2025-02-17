@@ -56,6 +56,12 @@ in {
 
           networking.firewall.allowedTCPPorts = [ 80 ];
 
+          networking.firewall.extraCommands = ''
+            iptables -A nixos-fw -p tcp --dport 80 -s 127.0.0.0/8 -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp --dport 80 -s ${net.vpsadmin.frontend.address}/32 -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp --dport 80 -s 172.16.107.0/24 -j nixos-fw-accept
+          '';
+
           fileSystems."/opt/vpsadmin/webui/vendor/haveapi/client" = {
             device = "/opt/haveapi/clients/php";
             fsType = "none";
