@@ -203,4 +203,6 @@ in {
   system.vpsadminos.enableUnstable = true;
 
   services.irqbalance.enable = true;
+
+  boot.zfsBuiltin = false;
 }
