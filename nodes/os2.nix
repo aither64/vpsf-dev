@@ -11,6 +11,7 @@ in {
   imports = [
     ./base.nix
     #../repository.nix
+    # ./crashdump.nix
   ];
 
   networking.hostName = "os2.prg.vpsfree.cz";

@@ -28,6 +28,31 @@ in {
     "sunrpc"
   ];
 
+  boot.initrd.network = {
+    enable = true;
+    enableSetupInCrashDump = false;
+
+    customSetupCommands = ''
+      if grep -q this_is_a_crash_kernel /proc/cmdline ; then
+        echo "Renaming network interfaces"
+        ${concatStringsSep "\n" (mapAttrsToList (name: mac: renameNetif mac name) netifs)}
+
+        echo "Configuring network"
+        ip addr add 172.16.106.72/24 dev oneg0
+        ip link set oneg0 up
+        ip route add default via 172.16.106.1 dev oneg0
+      fi
+    '';
+
+    ssh = {
+      enable = true;
+      hostKeys = [
+        ../data/initrd/ssh_host_rsa_key
+        ../data/initrd/ssh_host_ed25519_key
+      ];
+    };
+  };
+
   boot.initrd.extraUtilsCommands = ''
     copy_bin_and_libs ${pkgs.nfs-utils}/bin/mount.nfs
   '';
@@ -40,14 +65,6 @@ in {
       mountpoint="/mnt/nfs"
       target="$mountpoint/${config.networking.hostName}/$date"
 
-      echo "Renaming network interfaces"
-      ${concatStringsSep "\n" (mapAttrsToList (name: mac: renameNetif mac name) netifs)}
-
-      echo "Configuring network"
-      ip addr add 172.16.106.42/24 dev oneg0
-      ip link set oneg0 up
-      ip route add default via 172.16.106.1 dev oneg0
-
       echo "Mounting NFS"
       mkdir -p "$mountpoint"
       mount.nfs -v -o vers=4 "$server" "$mountpoint" || fail "Unable to mount NFS share"
@@ -55,8 +72,10 @@ in {
       echo "Target dir $target"
       mkdir -p "$target"
 
-      echo "Dumping core file"
-      makedumpfile -D -c -d 31 /proc/vmcore "$target/dumpfile"
+      cpuCount=$(nproc)
+
+      echo "Dumping core file using $cpuCount threads"
+      LD_PRELOAD=$LD_LIBRARY_PATH/libgcc_s.so.1 makedumpfile -c -d 0 --num-threads $cpuCount /proc/vmcore "$target/dumpfile"
 
       echo "Rebooting"
       #reboot -f
