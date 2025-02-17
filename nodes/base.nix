@@ -200,7 +200,7 @@ in {
     "vpsadminos=/mnt/vpsadminos"
   ];
 
-  # system.vpsadminos.enableUnstable = true;
+  system.vpsadminos.enableUnstable = true;
 
   services.irqbalance.enable = true;
 }
