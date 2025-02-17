@@ -1,6 +1,24 @@
 { config, pkgs, lib, ... }:
 let
   net = import ../networking.nix;
+
+  vhosts = [
+    "api.aitherdev.int.vpsfree.cz"
+    "api-tmp.aitherdev.int.vpsfree.cz"
+    "auth.aitherdev.int.vpsfree.cz"
+    "auth-tmp.aitherdev.int.vpsfree.cz"
+    "console.aitherdev.int.vpsfree.cz"
+    "console-tmp.aitherdev.int.vpsfree.cz"
+    "download.aitherdev.int.vpsfree.cz"
+    "webui.aitherdev.int.vpsfree.cz"
+    "webui-tmp.aitherdev.int.vpsfree.cz"
+  ];
+
+  makeVhosts = lib.listToAttrs (map (vhost: lib.nameValuePair vhost {
+    addSSL = true;
+    sslCertificate = "/private/vpsadmin-cert.crt";
+    sslCertificateKey = "/private/vpsadmin-cert.key";
+  }) vhosts);
 in {
   osctl.pools.tank = {
     users.vpsadmin-front = {
@@ -93,12 +111,12 @@ in {
             bind = "/run/varnish/vpsadmin-varnish.sock,mode=0666";
 
             api.prod = {
-              domain = "api.dev.home.vpsfree.cz";
+              domain = "api.aitherdev.int.vpsfree.cz";
               backend.path = "/run/haproxy/vpsadmin-api.sock";
             };
 
             api.maintenance = {
-              domain = "api-tmp.dev.home.vpsfree.cz";
+              domain = "api-tmp.aitherdev.int.vpsfree.cz";
               backend.path = "/run/haproxy/vpsadmin-api.sock";
             };
           };
@@ -108,7 +126,7 @@ in {
 
             api = {
               production = {
-                domain = "api.dev.home.vpsfree.cz";
+                domain = "api.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5000;
@@ -119,7 +137,7 @@ in {
               };
 
               maintenance = {
-                domain = "api-tmp.dev.home.vpsfree.cz";
+                domain = "api-tmp.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5000;
@@ -131,7 +149,7 @@ in {
 
             auth = {
               production = {
-                domain = "auth.dev.home.vpsfree.cz";
+                domain = "auth.aitherdev.int.vpsfree.cz";
                 backend = {
                   address = "unix:/run/haproxy/vpsadmin-api.sock";
                 };
@@ -139,7 +157,7 @@ in {
               };
 
               maintenance = {
-                domain = "auth-tmp.dev.home.vpsfree.cz";
+                domain = "auth-tmp.aitherdev.int.vpsfree.cz";
                 backend = {
                   address = "unix:/run/haproxy/vpsadmin-api.sock";
                 };
@@ -148,7 +166,7 @@ in {
 
             console-router = {
               production = {
-                domain = "console.dev.home.vpsfree.cz";
+                domain = "console.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5002;
@@ -157,7 +175,7 @@ in {
               };
 
               maintenance = {
-                domain = "console-tmp.dev.home.vpsfree.cz";
+                domain = "console-tmp.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5002;
@@ -168,13 +186,13 @@ in {
 
             download-mounter = {
               production = {
-                domain = "download.dev.home.vpsfree.cz";
+                domain = "download.aitherdev.int.vpsfree.cz";
               };
             };
 
             webui = {
               production = {
-                domain = "webui.dev.home.vpsfree.cz";
+                domain = "webui.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5001;
@@ -184,7 +202,7 @@ in {
               };
 
               maintenance = {
-                domain = "webui-tmp.dev.home.vpsfree.cz";
+                domain = "webui-tmp.aitherdev.int.vpsfree.cz";
                 backend = {
                   # host = "localhost";
                   # port = 5001;
@@ -193,6 +211,8 @@ in {
               };
             };
           };
+
+          services.nginx.virtualHosts = makeVhosts;
         };
       };
   };
