@@ -58,6 +58,12 @@ in {
 
           networking.nameservers = net.nameservers;
 
+          networking.firewall.extraCommands = lib.concatMapStringsSep "\n" (port: ''
+            iptables -A nixos-fw -p tcp --dport ${toString port} -s 127.0.0.0/8 -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp --dport ${toString port} -s 172.16.106.40/32 -j nixos-fw-accept
+            iptables -A nixos-fw -p tcp --dport ${toString port} -s 172.16.107.0/24 -j nixos-fw-accept
+          '') [ 80 443 4567 ];
+
           systemd.tmpfiles.rules = [
             "d /run/varnish 0755 varnish varnish -"
           ];
@@ -123,6 +129,7 @@ in {
 
           vpsadmin.frontend = {
             enable = true;
+            openFirewall = false;
 
             api = {
               production = {
