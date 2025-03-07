@@ -36,6 +36,7 @@ in {
           fs = "/mnt/vpsadmin-db";
           mountpoint = "/var/lib/mysql";
           opts = "bind,create=dir";
+          map_ids = true;
         }
       ];
 
