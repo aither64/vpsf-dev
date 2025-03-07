@@ -205,4 +205,5 @@ in {
   services.irqbalance.enable = true;
 
   boot.zfsBuiltin = false;
+  services.live-patches.enable = false;
 }
