@@ -25,12 +25,14 @@ in {
           fs = "/mnt/haveapi-bind";
           mountpoint = "/opt/haveapi";
           opts = "bind,create=dir";
+          map_ids = false;
         }
         {
           type = "bind";
           fs = "/mnt/vpsadmin-bind";
           mountpoint = "/opt/vpsadmin";
           opts = "bind,create=dir";
+          map_ids = false;
         }
       ];
 
