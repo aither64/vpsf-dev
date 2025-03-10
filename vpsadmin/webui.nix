@@ -80,6 +80,8 @@ in {
             api.internalUrl = "https://api.aitherdev.int.vpsfree.cz:4567";
             extraConfig = ''
               require "/private/vpsadmin-webui.php";
+
+              define('API_SSL_VERIFY', false);
             '';
             allowedIPv4Ranges = [
               "${net.vpsadmin.frontend.address}/32"
