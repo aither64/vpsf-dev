@@ -107,11 +107,11 @@ in {
 
           services.nginx.virtualHosts.${net.vpsadmin.webui.address}.locations."= /adminer/adminer.php" =
             let
-              version = "4.8.1";
+              version = "5.0.5";
 
               script = pkgs.fetchurl {
                 url = "https://github.com/vrana/adminer/releases/download/v${version}/adminer-${version}-en.php";
-                sha256 = "sha256:0sqi537gcd957ycrp5h463dwlgvgw2zm2h2xb8miwmxv37k6phsf";
+                sha256 = "sha256-ShqyKfU7/+V8E7Dk8IstrvZ2rUFSmxnBWQPG3iwJ7f4=";
               };
 
               rootDir = pkgs.runCommand "adminer-root" {} ''
