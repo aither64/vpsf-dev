@@ -167,10 +167,12 @@ in {
       }
     ];
 
-    network = {
-      mode = "bridge";
-      bridge.link = "br0";
-    };
+    networks = [
+      {
+        type = "bridge";
+        bridge.link = "br0";
+      }
+    ];
   };
 
   boot.zfs.pools = mkOverride 500 {
