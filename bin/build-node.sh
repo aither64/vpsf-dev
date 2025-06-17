@@ -12,8 +12,8 @@ for node in $@ ; do
 	nix-build \
 		--arg configuration "$cfg" \
 		--attr config.system.build.runvm \
-		--out-link result/nodes/$node/qemu \
-		--keep-going
+		--out-link result/nodes/$node/qemu
+#		--keep-going
 #		--arg vpsadmin ../../vpsadmin \
 done
 
