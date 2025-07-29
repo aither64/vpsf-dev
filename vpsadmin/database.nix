@@ -67,6 +67,12 @@ in {
               net.networkRange
             ];
           };
+
+          services.mysql.settings = {
+            mysqld = {
+              innodb_buffer_pool_size = "1024M";
+            };
+          };
         };
     };
   };
