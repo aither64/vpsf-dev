@@ -105,30 +105,39 @@ in {
             phpEnv."PATH" = lib.makeBinPath [ pkgs.php ];
           };
 
-          services.nginx.virtualHosts.${net.vpsadmin.webui.address}.locations."= /adminer/adminer.php" =
-            let
-              version = "5.0.5";
+          services.nginx.virtualHosts.${net.vpsadmin.webui.address} = {
+            locations."= /adminer/adminer.php" =
+              let
+                version = "5.0.5";
 
-              script = pkgs.fetchurl {
-                url = "https://github.com/vrana/adminer/releases/download/v${version}/adminer-${version}-en.php";
-                sha256 = "sha256-ShqyKfU7/+V8E7Dk8IstrvZ2rUFSmxnBWQPG3iwJ7f4=";
+                script = pkgs.fetchurl {
+                  url = "https://github.com/vrana/adminer/releases/download/v${version}/adminer-${version}-en.php";
+                  sha256 = "sha256-ShqyKfU7/+V8E7Dk8IstrvZ2rUFSmxnBWQPG3iwJ7f4=";
+                };
+
+                rootDir = pkgs.runCommand "adminer-root" {} ''
+                  mkdir -p $out/adminer
+                  ln -s ${script} $out/adminer.php
+                  ln -s ${script} $out/adminer/adminer.php
+                '';
+              in {
+                root = rootDir;
+                extraConfig = ''
+                  fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                  fastcgi_pass unix:${config.services.phpfpm.pools.adminer.socket};
+                  include ${pkgs.nginx}/conf/fastcgi_params;
+                  include ${pkgs.nginx}/conf/fastcgi.conf;
+                  fastcgi_index adminer.php;
+                '';
               };
 
-              rootDir = pkgs.runCommand "adminer-root" {} ''
-                mkdir -p $out/adminer
-                ln -s ${script} $out/adminer.php
-                ln -s ${script} $out/adminer/adminer.php
-              '';
-            in {
-              root = rootDir;
+            locations."/novnc" = {
+              root = "${pkgs.novnc}/share/webapps";
               extraConfig = ''
-                fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass unix:${config.services.phpfpm.pools.adminer.socket};
-                include ${pkgs.nginx}/conf/fastcgi_params;
-                include ${pkgs.nginx}/conf/fastcgi.conf;
-                fastcgi_index adminer.php;
+                add_header Cache-Control no-cache;
               '';
             };
+          };
 
           users.users.adminer = {
             isSystemUser = true;
