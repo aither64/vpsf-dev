@@ -21,3 +21,5 @@ DNS.6 = console-tmp.aitherdev.int.vpsfree.cz
 DNS.7 = download.aitherdev.int.vpsfree.cz
 DNS.8 = webui.aitherdev.int.vpsfree.cz
 DNS.9 = webui-tmp.aitherdev.int.vpsfree.cz
+DNS.10 = vnc.aitherdev.int.vpsfree.cz
+DNS.11 = vnc-tmp.aitherdev.int.vpsfree.cz
