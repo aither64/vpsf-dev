@@ -89,6 +89,18 @@ in {
               passwordFile = "/private/vpsadmin-console-rabbitmq.pw";
             };
           };
+
+          vpsadmin.vnc-router = {
+            enable = true;
+            address = net.vpsadmin.api.address;
+            allowedIPv4Ranges = [
+              "${net.vpsadmin.frontend.address}/32"
+            ];
+            rabbitmq = {
+              username = "vnc-router";
+              passwordFile = "/private/vpsadmin-vnc-rabbitmq.pw";
+            };
+          };
         };
     };
   };
