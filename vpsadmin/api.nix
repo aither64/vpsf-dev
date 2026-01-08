@@ -40,7 +40,6 @@ in {
 
           networking.nameservers = net.nameservers;
 
-
           vpsadmin.api = {
             enable = true;
             configDirectory =
@@ -81,6 +80,7 @@ in {
 
           vpsadmin.console-router = {
             enable = true;
+            address = net.vpsadmin.api.address;
             allowedIPv4Ranges = [
               "${net.vpsadmin.frontend.address}/32"
             ];
