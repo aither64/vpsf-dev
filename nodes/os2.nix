@@ -28,6 +28,7 @@ in {
   boot.qemu.disks = [
     { device = "os2-tank.dat"; type = "file"; size = "40G"; }
     { device = "os2-dozer.dat"; type = "file"; size = "20G"; }
+    { device = "os2-libvirt.dat"; type = "file"; size = "40G"; create = true; }
   ];
 
   networking.static = {
@@ -230,4 +231,17 @@ in {
   # ];
 
   boot.kernel.sysctl."kernel.modprobe" = "${modprobeWrapper}";
+
+  virtualisation.libvirtd = {
+    # enable = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    e2fsprogs
+  ];
+
+  fileSystems."/var/lib/libvirt" = {
+    device = "/dev/disk/by-uuid/4936c8ee-1d0c-42db-8573-a7f516468d63";
+    fsType = "ext4";
+  };
 }

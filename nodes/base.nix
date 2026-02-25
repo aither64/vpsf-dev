@@ -192,6 +192,8 @@ in {
   };
 
   boot.postBootCommands = ''
+    mkdir -p /var/lib/libvirt
+
     mount -a
 
     mkdir -p /mnt/vpsadmin-bind /mnt/haveapi-bind
