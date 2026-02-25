@@ -40,6 +40,15 @@ in {
 
           networking.nameservers = net.nameservers;
 
+          vpsadmin.databaseSetup = {
+            database = {
+              host = net.vpsadmin.database.address;
+              user = "vpsadmin";
+              name = "vpsadmin";
+              passwordFile = "/private/vpsadmin-db.pw";
+            };
+          };
+
           vpsadmin.api = {
             enable = true;
             configDirectory =
