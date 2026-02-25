@@ -236,6 +236,13 @@ in {
     # enable = true;
   };
 
+  osctl.oomd = {
+    enable = true;
+    settings = {
+      verbose = true;
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     e2fsprogs
   ];
