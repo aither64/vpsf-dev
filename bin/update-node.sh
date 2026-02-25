@@ -2,23 +2,21 @@
 set -x
 set -e
 
-pushd "$WORKSPACE"/vpsadmin/vpsadminos/os
+VPSADMINOS_OS_DIR="$WORKSPACE/vpsadmin/vpsadminos/os"
+pushd "$VPSADMINOS_OS_DIR"
 
-for node in $@ ; do
+for node in "$@" ; do
 	cfg="$VPSFDEV/nodes/$node.nix"
-	ip=$(nix-instantiate \
-		--arg configuration "$cfg" \
-		--eval \
-		--attr config.networking.static.ip)
+	ip=$(VPSADMINOS_CONFIG="$cfg" nix eval --impure --raw \
+		--expr 'let sys = (builtins.getFlake (toString ../.)).lib.vpsadminosSystem { system = builtins.currentSystem; }; in sys.config.networking.static.ip')
 #		--arg vpsadmin ../../vpsadmin \
-	addr="${ip:1}"
-	addr="${addr%%/*}"
+	addr="${ip%%/*}"
 	mkdir -p result/nodes/$node
-	nix-build \
-		--arg configuration "$cfg" \
-		--attr config.system.build.toplevel \
+	VPSADMINOS_CONFIG="$cfg" nix build --impure \
 		--show-trace \
-		--out-link result/nodes/$node/toplevel
+		--out-link result/nodes/$node/toplevel \
+		..#toplevel
+    # --cores 16 \
 #		--keep-going \
 #		--arg vpsadmin ../../vpsadmin \
 	system="$(readlink result/nodes/$node/toplevel)"
