@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, vpsadminNixosModule, ... }:
 let
   net = import ../networking.nix;
 in {
@@ -42,7 +42,7 @@ in {
         { config, pkgs, lib, ... }:
         {
           imports = [
-            <vpsadmin/nixos/modules/nixos-modules.nix>
+            vpsadminNixosModule
           ];
 
           networking.interfaces.eth0.ipv4.addresses = [

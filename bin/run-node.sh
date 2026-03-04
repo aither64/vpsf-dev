@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-exec sudo -E ./os/result/nodes/$1/qemu
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+exec sudo -E "$ROOT_DIR/result/nodes/$1/qemu"

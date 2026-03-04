@@ -1,4 +1,11 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  vpsadminVpsadminosModule,
+  vpsadminosQemuModule,
+  ...
+}:
 with lib;
 let
   qemuCfg = config.boot.qemu;
@@ -9,8 +16,8 @@ let
 
 in {
   imports = [
-    <vpsadmin/nixos/modules/vpsadminos-modules.nix>
-    <vpsadminos/os/configs/qemu.nix>
+    vpsadminVpsadminosModule
+    vpsadminosQemuModule
     ../vpsadmin/settings.nix
   ];
 
@@ -200,11 +207,6 @@ in {
   programs.bash.root.historyPools = mkDefault [ "tank" ];
 
   os.channel-registration.enable = false;
-
-  nix.nixPath = [
-    "nixpkgs=/mnt/nixpkgs"
-    "vpsadminos=/mnt/vpsadminos"
-  ];
 
   system.vpsadminos.enableUnstable = true;
 

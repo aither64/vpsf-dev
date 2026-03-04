@@ -2,19 +2,20 @@
 set -x
 set -e
 
-VPSADMINOS_OS_DIR="$WORKSPACE/vpsadmin/vpsadminos/os"
-pushd "$VPSADMINOS_OS_DIR"
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+WORKSPACE_DIR="$(cd "${ROOT_DIR}/.." && pwd)"
+VPSADMIN_SRC="${WORKSPACE_DIR}/vpsadmin/vpsadmin"
+VPSADMINOS_SRC="${WORKSPACE_DIR}/vpsadmin/vpsadminos"
+pushd "$ROOT_DIR"
 
-#for cfg in `ls -1 ./configs/nodes/os1.nix` ; do
-#for cfg in `ls -1 ./configs/nodes/os2.nix` ; do
-for node in "$@" ; do
-	cfg="$VPSFDEV/nodes/$node.nix"
-	mkdir -p result/nodes/$node
-	VPSADMINOS_CONFIG="$cfg" nix build --impure \
-		--out-link result/nodes/$node/qemu \
-		..#qemu
-#		--keep-going
-#		--arg vpsadmin ../../vpsadmin \
+for node in "$@"; do
+  mkdir -p result/nodes/$node
+  nix build \
+    --impure \
+    --override-input vpsadmin "git+file://${VPSADMIN_SRC}" \
+    --override-input vpsadminos "git+file://${VPSADMINOS_SRC}" \
+    --out-link result/nodes/$node/qemu \
+    "path:${ROOT_DIR}#${node}-qemu"
 done
 
 popd

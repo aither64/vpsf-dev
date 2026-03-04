@@ -1,8 +1,7 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, vpsadminNixosModule, ... }:
 let
   net = import ../networking.nix;
-in 
-{
+in {
   osctl.pools.tank = {
     users.vpsadmin-mailer = {
       uidMap = [ "0:500000:65536" ];
@@ -26,7 +25,7 @@ in
         { config, pkgs, lib, ... }:
         {
           imports = [
-            <vpsadmin/nixos/modules/nixos-modules.nix>
+            vpsadminNixosModule
             ./settings.nix
           ];
 
