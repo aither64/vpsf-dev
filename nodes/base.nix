@@ -69,6 +69,10 @@ in {
     enable = true;
     extraFlags = [ "--collector.textfile.directory=/run/metrics" ];
   };
+  services.prometheus.exporters.ebpf = {
+    enable = true;
+    names = [ "rtnl_lock-latency" ];
+  };
   services.prometheus.exporters.osctl.enable = true;
   boot.kernel.sysctl."sunrpc.nfs_debug" = 1023;
 
