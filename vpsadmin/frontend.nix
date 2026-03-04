@@ -9,8 +9,6 @@ let
     "auth-tmp.aitherdev.int.vpsfree.cz"
     "console.aitherdev.int.vpsfree.cz"
     "console-tmp.aitherdev.int.vpsfree.cz"
-    "vnc.aitherdev.int.vpsfree.cz"
-    "vnc-tmp.aitherdev.int.vpsfree.cz"
     "download.aitherdev.int.vpsfree.cz"
     "webui.aitherdev.int.vpsfree.cz"
     "webui-tmp.aitherdev.int.vpsfree.cz"
@@ -97,17 +95,6 @@ in {
                 {
                   host = net.vpsadmin.api.address;
                   port = 8000;
-                }
-              ];
-            };
-
-            vnc-router.prod = {
-              frontend.bind = [ "unix@/run/haproxy/vpsadmin-vnc-router.sock mode 0666" ];
-              # frontend.port = 5002;
-              backends = [
-                {
-                  host = net.vpsadmin.api.address;
-                  port = 8001;
                 }
               ];
             };
@@ -203,26 +190,6 @@ in {
                   # host = "localhost";
                   # port = 5002;
                   address = "unix:/run/haproxy/vpsadmin-console-router.sock";
-                };
-              };
-            };
-
-            vnc-router = {
-              production = {
-                domain = "vnc.aitherdev.int.vpsfree.cz";
-                backend = {
-                  # host = "localhost";
-                  # port = 5002;
-                  address = "unix:/run/haproxy/vpsadmin-vnc-router.sock";
-                };
-              };
-
-              maintenance = {
-                domain = "vnc-tmp.aitherdev.int.vpsfree.cz";
-                backend = {
-                  # host = "localhost";
-                  # port = 5002;
-                  address = "unix:/run/haproxy/vpsadmin-vnc-router.sock";
                 };
               };
             };

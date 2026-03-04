@@ -26,10 +26,6 @@ in {
   system.secretsDir = "/secrets";
   vpsadmin.nodectld = {
     enable = true;
-    vnc.allowedIPv4Ranges = [
-      net.vpsadmin.api.address
-      net.aitherdev.address
-    ];
     settings = {
       vpsadmin = {
         net_interfaces = [ "eth0" ];
