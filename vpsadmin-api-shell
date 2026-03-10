@@ -1,4 +1,5 @@
 #!/bin/sh
 . ./vars.sh
-cd "$WORKSPACE"/vpsadmin/vpsadmin/api
-exec dev-shell "$@"
+. ./shellhook.local.sh
+cd "$WORKSPACE"/vpsadmin/vpsadmin
+exec nix develop .#api "$@"

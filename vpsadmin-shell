@@ -2,4 +2,4 @@
 . ./vars.sh
 . ./shellhook.local.sh
 cd "$WORKSPACE"/vpsadmin/vpsadmin
-exec dev-shell "$@"
+exec nix develop .#vpsadmin "$@"
